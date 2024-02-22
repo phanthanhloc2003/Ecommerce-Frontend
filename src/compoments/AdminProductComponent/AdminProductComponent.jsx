@@ -8,8 +8,11 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import { addProduct, deleteProduct, getAllProduct } from "../../services/ProductService";
+import { useSelector } from "react-redux";
+import { UpdateProduct, addProduct, deleteProduct, getAllProduct } from "../../services/ProductService";
 import { useEffect } from "react";
+
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -24,7 +27,7 @@ function AdminProduct() {
   const [open, setOpen] = useState(false);
   const [reloadData, setReloadData] = useState(false);
   const { register, handleSubmit } = useForm();
-
+  const user = useSelector((state) => state.user);
   const [rows, setRows] = useState([]);
 
 
@@ -39,6 +42,12 @@ function AdminProduct() {
 
   const handleDeleteProduct = async (id) => {
     await deleteProduct(id); 
+    setReloadData(!reloadData); 
+  };
+  const handleUpdateProduct = async (id , data) => {
+ 
+const token = user.access_Token
+    await UpdateProduct(id , data , token)
     setReloadData(!reloadData); 
   };
   const onSubmit = async (data) => {
@@ -70,7 +79,7 @@ function AdminProduct() {
         <i className="bi bi-plus-lg text-[40px]"></i>
       </button>
       <div className="mt-[20px]">
-        <DataTable data={rows}  reloadData={reloadData}  onDeleteProduct={handleDeleteProduct} />
+        <DataTable data={rows}  reloadData={reloadData} onUpdateProduct={handleUpdateProduct}   onDeleteProduct={handleDeleteProduct} />
       </div>
       <Fragment>
         <BootstrapDialog

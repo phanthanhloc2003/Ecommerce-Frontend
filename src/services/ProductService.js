@@ -23,5 +23,25 @@ export const deleteProduct = async (id) => {
   );
   return res.data;
 };
+export const detailsProduct = async (id) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/details-product/${id}`
+  );
+  return res.data.data;
+};
+
+
+export const UpdateProduct = async (id , data , token) => {
+  const res = await axios.put(
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/update-product/${id}`, data,
+    {
+      headers: {
+        token: `beare ${token}`,
+      },
+    }
+  );
+  return res.data.data;
+};
+
 
 
