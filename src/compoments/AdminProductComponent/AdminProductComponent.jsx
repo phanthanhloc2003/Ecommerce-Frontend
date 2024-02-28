@@ -9,7 +9,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { UpdateProduct, addProduct, deleteProduct, getAllProduct } from "../../services/ProductService";
+import { UpdateProduct, addProduct, deleteMany, deleteProduct, getAllProduct } from "../../services/ProductService";
 import { useEffect } from "react";
 
 
@@ -50,6 +50,11 @@ const token = user.access_Token
     await UpdateProduct(id , data , token)
     setReloadData(!reloadData); 
   };
+
+  const handleDeleteMany = async(id) => {
+     await deleteMany(id)
+     setReloadData(!reloadData); 
+     };
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append("name", data.name);
@@ -79,7 +84,7 @@ const token = user.access_Token
         <i className="bi bi-plus-lg text-[40px]"></i>
       </button>
       <div className="mt-[20px]">
-        <DataTable data={rows}  reloadData={reloadData} onUpdateProduct={handleUpdateProduct}   onDeleteProduct={handleDeleteProduct} />
+        <DataTable data={rows}  reloadData={reloadData} onUpdateProduct={handleUpdateProduct} onDeleteManyProduct = {handleDeleteMany}  onDeleteProduct={handleDeleteProduct} />
       </div>
       <Fragment>
         <BootstrapDialog

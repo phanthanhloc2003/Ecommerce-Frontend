@@ -55,6 +55,10 @@ function Account() {
       const data = await updateDataUser(user?.id, { nickname });
       handleUploadnickname(user.id, user.access_Token);
     }
+    if(name){
+      const data = await updateDataUser(user?.id, { name });
+      handleUploadnickname(user.id, user.access_Token);
+    }
   };
   const handleUploadnickname = async (id , token) => {
     const res = await getDetailsUser(id, token);

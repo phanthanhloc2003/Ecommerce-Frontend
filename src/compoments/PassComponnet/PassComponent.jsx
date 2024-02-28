@@ -1,20 +1,19 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useState } from "react";
+import {  useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   passWordUser
 } from "../../services/UserService";
-import { updateUser } from "../../redux/features/user/userSlice";
+
 
 function Pass() {
   const user = useSelector((state) => state.user);
-
   const navigate = useNavigate();
   const [current, setCurrent] = useState("");
-
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error , setError] = useState(false);
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
@@ -23,8 +22,11 @@ function Pass() {
     try {
       e.preventDefault();
       await passWordUser(user.id, { current , newPassword,password});
+      navigate("/profile/account/edit")
+       
     } catch (error) {
-      console.log(error);
+    
+      setError(error.response.data.message)
     }
   };
 
@@ -34,7 +36,9 @@ function Pass() {
       <div className="text-[20px] leading-[32px] font-light mt-[4px] mb-[12px]">
         Cập nhật mật khẩu
       </div>
+      <span className="text-[red] block text-center">{error}</span>
       <div className="bg-[#FFFFFF] py-[30px] px-[20px] flex justify-center rounded-[8px]">
+        
         <form className="w-[400px] p-[16px] border-[1px] border-[#EBEBF0] rounded-[4px]">
           <div className="flex flex-col mb-[34px]">
             <label className="text-[14px] mb-[4px] text-[#38383D]">
@@ -53,7 +57,7 @@ function Pass() {
                   alt=""
                 />
                 <input
-                  className="pr-[35px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
+                  className={`pr-[35px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]  ${error ? "border-[#E63946]" : ""}  `}
                   type={showPassword ? "text" : "password"}
                   value={current}
                   onChange={(e) => setCurrent(e.target.value)}
@@ -79,7 +83,7 @@ function Pass() {
                   alt=""
                 />
                 <input
-                  className="pr-[35px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
+                   className={`pr-[35px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]  ${error ? "border-[#E63946]" : ""}  `}
                   type={showPassword ? "text" : "password"}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -104,7 +108,7 @@ function Pass() {
                   alt=""
                 />
                 <input
-                  className="pr-[35px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
+                  className={`pr-[35px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]  ${error ? "border-[#E63946]" : ""}  `}
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -113,6 +117,7 @@ function Pass() {
               </div>
             </div>
           </div>
+         
           <button
             onClick={handleUpload}
             className="w-[100%] h-[40px] border-[0px] rounded-[4px] text-[#FFFFFF] text-[14px] bg-[#0D74E5] cursor-pointer"

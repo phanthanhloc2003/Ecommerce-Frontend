@@ -6,13 +6,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { detailsProduct } from "../../services/ProductService";
+import {  detailsProduct } from "../../services/ProductService";
 
-export default function DataTable({ data, onDeleteProduct, onUpdateProduct }) {
+export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onDeleteManyProduct }) {
   const [open, setOpen] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
   const [opens, setOpens] = useState(false);
-  const [id , setId]=useState(null);
+  const [id, setId] = useState(null);
   const [name, setName] = useState(null);
   const [type, setType] = useState(null);
   const [countInStock, setCountInStock] = useState(null);
@@ -20,6 +20,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct }) {
   const [description, setDescription] = useState(null);
   const [rating, setRating] = useState(null);
   const [image, setImage] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
   const handleClickOpen = (id) => {
     setProductIdToDelete(id);
     setOpen(true);
@@ -42,17 +43,38 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct }) {
     setCountInStock(data.countInStock);
     setRating(data.rating);
     setPrice(data.price);
-    setId(data._id)
+    setId(data._id);
     setOpens(true);
-    
   };
-  const hanleOnUpdate = async() => {
-  await onUpdateProduct(id , {name , type, description, countInStock, price, rating})
-  }
+  const hanleOnUpdate = async () => {
+    await onUpdateProduct(id, {
+      name,
+      type,
+      description,
+      countInStock,
+      price,
+      rating,
+    });
+  };
 
+  const handleDelete = async () => {
+  await  onDeleteManyProduct(selectedItems)
+  }
   const handleCloses = () => {
     setOpens(false);
   };
+
+  const handleCheckboxChange = (e, itemId) => {
+    if (e.target.checked) {
+      setSelectedItems((prevSelected) => [...prevSelected, itemId]);
+    } else {
+      setSelectedItems((prevSelected) =>
+        prevSelected.filter((id) => id !== itemId)
+      );
+    }
+  };
+ 
+
   let index = 1;
   return (
     <div>
@@ -79,7 +101,11 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct }) {
           {data.map((item) => (
             <tr className="text-center">
               <th scope="row">
-                <input className="form-check-input" type="checkbox" />
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  onChange={(e) => handleCheckboxChange(e, item._id)}
+                />
               </th>
               <th scope="row">{index++}</th>
               <td>{item.name}</td>
@@ -100,6 +126,12 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct }) {
           ))}
         </tbody>
       </table>
+      <button
+        onClick={handleDelete}
+        className="block ml-auto mr-[10px] bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+      >
+        xoá
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -132,7 +164,6 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct }) {
               const formData = new FormData(event.currentTarget);
               const formJson = Object.fromEntries(formData.entries());
               const email = formJson.email;
-              console.log(email);
               handleClose();
             },
           }}

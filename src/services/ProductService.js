@@ -1,4 +1,5 @@
 import axios from "axios";
+export const axiosJWT = axios.create();
 
 export const getAllProduct = async (param = {queryParam : {limit: 0, page: 0}}) => {
   const res = await axios.get(
@@ -32,16 +33,22 @@ export const detailsProduct = async (id) => {
 
 
 export const UpdateProduct = async (id , data , token) => {
-  const res = await axios.put(
+  const res = await axiosJWT.put(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/update-product/${id}`, data,
     {
       headers: {
-        token: `beare ${token}`,
+        token: `bearer ${token}`,
       },
     }
   );
   return res.data.data;
 };
 
+export const deleteMany = async (id) => {
+  const res = await axios.delete(
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/deleteMany`,  { data: id }
+  );
+  return res.data;
+};
 
 

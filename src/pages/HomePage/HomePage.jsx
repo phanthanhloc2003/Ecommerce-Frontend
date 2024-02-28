@@ -1,4 +1,4 @@
-import HeaderComponent from "../../compoments/HeaderComponent/HeaderComponent";
+
 import SlickImages from "../../compoments/SlickImages/SlickImages";
 import imgage1 from "../../acssets/imgaes/photo-1.jpg.webp";
 import imgage2 from "../../acssets/imgaes/photo-2.jpeg";
@@ -35,7 +35,7 @@ function HomePage() {
         <div className="mb-[40px]">
           <SlickImages imgaes={[imgage1, imgage2, imgage3, imgage4]} />
         </div>
-        <div className="row g-2 flex flex-wrap ">
+        <div className=" g-2 flex flex-wrap ">
           {product?.data.map((product) => {
             return (
               <ProductCompoment

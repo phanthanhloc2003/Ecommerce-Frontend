@@ -3,11 +3,11 @@ function ProductCompoment(props) {
   const {countInStock,description,image,name,price,rating,type,discount,selled} = props;
 
   return (
-    <a href="/detail/:id" className=" col mt-[40px] no-underline">
-      <div className="flex flex-col   m-[3px] p-[10px] bg-[#fff] rounded-[8px] border border-solid border-gray-300">
+    <a href="/detail/:id" className=" flex mt-[40px] no-underline ">
+      <div className="flex flex-col  m-[3px] p-[10px] bg-[#fff] rounded-[8px] border border-solid border-gray-300 h-[320px] w-[250px]">
         <div>
           <img
-            className="w-[100%] h-[100%]"
+            className="w-[100%] h-[200px]"
             src={`http://localhost:3000/${image}`}
             alt=""
           />

@@ -44,7 +44,7 @@ function App() {
     if(decoded.exp < dataTime){
       let refresh = localStorage.getItem("refresh_token");
       const data = await refreshToken(refresh ? JSON.parse(refresh) : '');
-      config.headers["token"]  = `beare ${data.data.access_Token}`
+      config.headers["token"]  = `bearer ${data.data.access_Token}`;
     }
   
       return config;
@@ -54,7 +54,6 @@ function App() {
       return Promise.reject(error);
     }
   );
-
   const handleGetDetailsUser = async (id, token) => {
     const res = await getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, token }));

@@ -5,11 +5,14 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../../redux/features/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { searchTerm } from "../../redux/features/search/searchSlice";
 
 function HeaderComponent() {
   const user = useSelector((state) => state.user);
+  const values = useSelector((state) => state.search)
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate()
+  const [value , setValue] = useState("");
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
 
@@ -21,6 +24,9 @@ function HeaderComponent() {
     dispatch(clearUser())
     setAnchorEl(null);
   };
+  const handleSearch = () => {
+    console.log("alue", value)
+  }
 
   return (
     <div className="bg-[#ffffff] py-[8px] relative ">
@@ -60,9 +66,11 @@ function HeaderComponent() {
               <div className="mt-[6px] px-[10px] ">
                 <i className="bi bi-search"></i>
               </div>
-              <input className=" flex-1  outline-none" type="text" />
+              <input onChange={(e) =>setValue(e.target.value)} className=" flex-1  outline-none" type="text" />
 
-              <button className="h-[36px] rounded-r-[10px] hover:bg-[#D2E0FF] z-[1] w-[80px] p-[4px] after:[absolute border-l border-solid border-gray-300 h-[10px] left-0 top-8] whitespace-nowrap">
+              <button
+              onClick={handleSearch}
+              className="h-[36px] rounded-r-[10px] hover:bg-[#D2E0FF] z-[1] w-[80px] p-[4px] after:[absolute border-l border-solid border-gray-300 h-[10px] left-0 top-8] whitespace-nowrap">
                 tìm kiếm
               </button>
             </div>

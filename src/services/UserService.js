@@ -25,8 +25,22 @@ export const getDetailsUser = async (id, token) => {
     `${process.env.REACT_APP_API_URL_BACKEND}/user/get-details/${id}`,
     {
       headers: {
-        token: `beare ${token}`,
+        token: `bearer ${token}`,
       },
+    }
+  );
+
+  return res.data;
+};
+
+export const getAllUser = async (token) => {
+
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API_URL_BACKEND}/user/getAll`,
+    {
+      headers: {
+        token: `bearer ${token}`,
+      }
     }
   );
 
@@ -45,8 +59,8 @@ export const refreshToken = async (refresh) => {
   };
 
   export const updateDataUser = async (id , data) => {
-   
-    const res = await axios.put(
+  console.log("id" , id , data);
+    const res = await axiosJWT.put(
       `${process.env.REACT_APP_API_URL_BACKEND}/user/update-user/${id}`,
       data
     );
@@ -68,5 +82,16 @@ export const refreshToken = async (refresh) => {
       data
     );
   
+    return res.data;
+  };
+
+  export const deleteUser = async (id , token) => {
+    const res = await axiosJWT.delete(
+      `${process.env.REACT_APP_API_URL_BACKEND}/user/delete-user/${id}`, {
+        headers: {
+          token: `bearer ${token}`,
+        },
+      });
+
     return res.data;
   };
