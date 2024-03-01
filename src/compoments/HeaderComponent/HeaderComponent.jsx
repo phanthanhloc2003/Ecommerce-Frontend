@@ -25,7 +25,7 @@ function HeaderComponent() {
     setAnchorEl(null);
   };
   const handleSearch = () => {
-    console.log("alue", value)
+    // console.log("alue", value)
   }
 
   return (

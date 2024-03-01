@@ -32,21 +32,29 @@ export const detailsProduct = async (id) => {
 };
 
 
-export const UpdateProduct = async (id , data , token) => {
+export const UpdateProduct = async (id, data, token) => {
   const res = await axiosJWT.put(
-    `${process.env.REACT_APP_API_URL_BACKEND}/product/update-product/${id}`, data,
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/update-product/${id}`,
+    data,
     {
       headers: {
-        token: `bearer ${token}`,
+        token: `bearer ${token}`, 
       },
     }
   );
   return res.data.data;
 };
 
-export const deleteMany = async (id) => {
-  const res = await axios.delete(
-    `${process.env.REACT_APP_API_URL_BACKEND}/product/deleteMany`,  { data: id }
+
+export const deleteMany = async (id, token) => {
+  const res = await axiosJWT.delete(
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/deleteMany`,
+    {
+      data: id,
+      headers: {
+        token: `bearer ${token}`,
+      },
+    }
   );
   return res.data;
 };

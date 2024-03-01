@@ -15,6 +15,7 @@ function EditDialog({ open, handleCloses, detailsUser, handleUpdateUser }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [nickname, setNickName] = useState("");
+  const [err , setErr] = useState("");
 
   useEffect(() => {
     if (detailsUser) {
@@ -26,11 +27,16 @@ function EditDialog({ open, handleCloses, detailsUser, handleUpdateUser }) {
     }
   }, [detailsUser]);
 
+  const isValidPhoneNumber = (phoneNumber) => {
+    const phoneNumberPattern = /^(0\d{9,10})$/;
+    return phoneNumberPattern.test(phoneNumber);
+  };
+  
   const handleUpdateUsers = async () => {
-    // Xử lý cập nhật thông tin người dùng
-
+    if(!isValidPhoneNumber(phone)) return setErr("bạn nhập ko đúng số điện thoaị , vui lòng nhập lại !")
     const isAdminValue = isAdmin === "true";
     await handleUpdateUser({ email, isAdmin: isAdminValue, name, phone, nickname });
+    handleCloses()
   };
 
   return (
@@ -104,6 +110,7 @@ function EditDialog({ open, handleCloses, detailsUser, handleUpdateUser }) {
             value={nickname}
             onChange={(e) => setNickName(e.target.value)}
           />
+          <span className="block text-center mt-[20px] text-[#B51700]">{err}</span>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloses}>Cancel</Button>

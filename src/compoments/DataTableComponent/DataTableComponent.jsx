@@ -7,8 +7,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import {  detailsProduct } from "../../services/ProductService";
+import currency from "currency.js";
 
-export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onDeleteManyProduct }) {
+
+
+export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onDeleteManyProduct  , token}) {
   const [open, setOpen] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
   const [opens, setOpens] = useState(false);
@@ -36,7 +39,6 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
   };
   const handleClickOpens = async (id) => {
     const data = await detailsProduct(id);
-
     setName(data.name);
     setType(data.type);
     setDescription(data.description);
@@ -46,7 +48,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
     setId(data._id);
     setOpens(true);
   };
-  const hanleOnUpdate = async () => {
+  const hanleOnUpdates = async () => {
     await onUpdateProduct(id, {
       name,
       type,
@@ -54,7 +56,8 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
       countInStock,
       price,
       rating,
-    });
+    },token);
+    setOpens(false);
   };
 
   const handleDelete = async () => {
@@ -99,6 +102,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
         </thead>
         <tbody className="table-group-divider">
           {data.map((item) => (
+            
             <tr className="text-center">
               <th scope="row">
                 <input
@@ -109,7 +113,8 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               </th>
               <th scope="row">{index++}</th>
               <td>{item.name}</td>
-              <td>{item.price}</td>
+              <td>{currency(item.price, { symbol: '', precision: 0 }).format() } đ</td>
+
               <td>{item.rating}</td>
               <td>{item.type}</td>
               <td>
@@ -128,7 +133,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
       </table>
       <button
         onClick={handleDelete}
-        className="block ml-auto mr-[10px] bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        className="block ml-auto mr-[10px] bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded"
       >
         xoá
       </button>
@@ -176,7 +181,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               margin="dense"
               name="name"
               label="name"
-              type="email"
+              type="search"
               fullWidth
               variant="standard"
               defaultValue={name}
@@ -190,7 +195,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               margin="dense"
               name="type"
               label="type"
-              type="type"
+              type="search"
               fullWidth
               variant="standard"
               defaultValue={type}
@@ -204,7 +209,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               margin="dense"
               name="Count inStock"
               label="Count inStock"
-              type="email"
+              type="search"
               fullWidth
               variant="standard"
               defaultValue={countInStock}
@@ -218,7 +223,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               margin="dense"
               name="price"
               label="price"
-              type="email"
+              type="search"
               fullWidth
               variant="standard"
               defaultValue={price}
@@ -233,7 +238,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               margin="dense"
               name="description"
               label="description"
-              type="email"
+              type="search"
               fullWidth
               variant="standard"
               defaultValue={description}
@@ -247,7 +252,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               margin="dense"
               name="rating"
               label="rating"
-              type="email"
+              type="search"
               fullWidth
               variant="standard"
               defaultValue={rating}
@@ -257,7 +262,7 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
             />
             <TextField
               autoFocus
-              required
+             
               margin="dense"
               name="Count inStock"
               type="file"
@@ -268,8 +273,8 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloses}>Cancel</Button>
-            <Button onClick={hanleOnUpdate}>Subscribe</Button>
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={handleCloses}>Huỷ</button>
+      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded" onClick={hanleOnUpdates}>OK</button>
           </DialogActions>
         </Dialog>
       </React.Fragment>

@@ -54,17 +54,18 @@ export const refreshToken = async (refresh) => {
         withCredentials: true,
         refreshToken: refresh || ''
       });
-
     return res.data;
   };
 
-  export const updateDataUser = async (id , data) => {
-  console.log("id" , id , data);
+  export const updateDataUser = async (id , data ,token) => {
+
     const res = await axiosJWT.put(
       `${process.env.REACT_APP_API_URL_BACKEND}/user/update-user/${id}`,
-      data
+      data,
+      {
+        headers:{token}
+      }
     );
-
     return res.data;
   };
   export const passWordUser = async (id , data) => {

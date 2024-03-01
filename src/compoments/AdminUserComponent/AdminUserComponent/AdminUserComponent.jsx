@@ -63,7 +63,7 @@ function AdminUser() {
 
   const handleUpdateUser = async (data) => {
     await updateDataUser(id , data , token ); 
-    setOpens(false);
+    setLoading(!loading);
   }
   const columns = [
     { field: "id", headerName: "ID", width: 70 },

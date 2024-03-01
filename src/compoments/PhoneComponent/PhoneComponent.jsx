@@ -9,12 +9,19 @@ function Phone() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
    const [phone , setPhone] = useState("")
+   const [err , setErr] = useState("")
+   const isValidPhoneNumber = (phoneNumber) => {
+    const phoneNumberPattern = /^(0\d{9,10})$/;
+    return phoneNumberPattern.test(phoneNumber);
+  };
+  
    useEffect(() =>{
     setPhone(user.phone)
    },[user])
    const handleUpload = async (e) => {
     try {
      e.preventDefault();
+     if(!isValidPhoneNumber(phone)) return setErr("bạn nhập ko đúng số điện thoaị , vui lòng nhập lại !")
       const data = await updateDataUser(user?.id, { phone });
       handleGetDetailsUser(user.id, user.access_Token);
       navigate("/profile/account/edit")
@@ -24,6 +31,7 @@ function Phone() {
   };
 
   const handleGetDetailsUser = async (id, token) => {
+   
     const res = await getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, token }));
   };
@@ -47,7 +55,7 @@ function Phone() {
                   alt=""
                 />
                 <input
-                  className="pl-[40px] w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
+                  className={`pl-[40px] w-[100%] border-solid border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px] ${err ? "border-[#FF69B4]" : ""}`}
                   type="search" 
                   value={phone}
                   onChange={(e)=> setPhone(e.target.value)}
@@ -55,9 +63,12 @@ function Phone() {
                   maxLength={10}
                   placeholder="nhập số điện thoại"
                 />
+              
               </div>
+              <div className="absolute top-[40px] text-[#FF0000]">{err}</div>
             </div>
           </div>
+         
           <button onClick={handleUpload} className="w-[100%] h-[40px] border-[0px] rounded-[4px] text-[#FFFFFF] text-[14px] bg-[#0D74E5] cursor-pointer">Lưu và thay dổi</button>
         </form>
       </div>

@@ -9,10 +9,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
-import { UpdateProduct, addProduct, deleteMany, deleteProduct, getAllProduct } from "../../services/ProductService";
+import {
+  UpdateProduct,
+  addProduct,
+  deleteMany,
+  deleteProduct,
+  getAllProduct,
+} from "../../services/ProductService";
 import { useEffect } from "react";
-
-
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -29,8 +33,7 @@ function AdminProduct() {
   const { register, handleSubmit } = useForm();
   const user = useSelector((state) => state.user);
   const [rows, setRows] = useState([]);
-
-
+  const token = user.access_Token;
   useEffect(() => {
     fetchData();
   }, [reloadData]);
@@ -41,20 +44,20 @@ function AdminProduct() {
   };
 
   const handleDeleteProduct = async (id) => {
-    await deleteProduct(id); 
-    setReloadData(!reloadData); 
+    await deleteProduct(id);
+    setReloadData(!reloadData);
   };
-  const handleUpdateProduct = async (id , data) => {
- 
-const token = user.access_Token
-    await UpdateProduct(id , data , token)
-    setReloadData(!reloadData); 
+  const handleUpdateProduct = async (id, data , token) => {
+      await UpdateProduct(id, data, token);
+      setOpen(false);
+    setReloadData(!reloadData);
+
   };
 
-  const handleDeleteMany = async(id) => {
-     await deleteMany(id)
-     setReloadData(!reloadData); 
-     };
+  const handleDeleteMany = async (id) => {
+    await deleteMany(id , token);
+    setReloadData(!reloadData);
+  };
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append("name", data.name);
@@ -66,7 +69,6 @@ const token = user.access_Token
     formData.append("image", data.image[0]);
     await addProduct(formData);
     setReloadData(!reloadData);
-   
   };
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,7 +86,14 @@ const token = user.access_Token
         <i className="bi bi-plus-lg text-[40px]"></i>
       </button>
       <div className="mt-[20px]">
-        <DataTable data={rows}  reloadData={reloadData} onUpdateProduct={handleUpdateProduct} onDeleteManyProduct = {handleDeleteMany}  onDeleteProduct={handleDeleteProduct} />
+        <DataTable
+          data={rows}
+          token = {token}
+          reloadData={reloadData}
+          onUpdateProduct={handleUpdateProduct}
+          onDeleteManyProduct={handleDeleteMany}
+          onDeleteProduct={handleDeleteProduct}
+        />
       </div>
       <Fragment>
         <BootstrapDialog
@@ -119,7 +128,6 @@ const token = user.access_Token
                   className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
                   type="text"
                   placeholder="nhập name"
-            
                 />
               </div>
               <div className="flex items-center py-[20px]">
@@ -129,7 +137,6 @@ const token = user.access_Token
                   className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
                   type="text"
                   placeholder="nhập type"
-            
                 />
               </div>
               <div className="flex items-center py-[20px]">
@@ -139,7 +146,6 @@ const token = user.access_Token
                   className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
                   type="text"
                   placeholder="nhập Count inStock"
-            
                 />
               </div>
               <div className="flex items-center py-[20px]">
@@ -149,7 +155,6 @@ const token = user.access_Token
                   className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
                   type="text"
                   placeholder="nhập price"
-            
                 />
               </div>
               <div className="flex items-center py-[20px]">
@@ -159,7 +164,6 @@ const token = user.access_Token
                   className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
                   type="text"
                   placeholder="nhập description"
-            
                 />
               </div>
               <div className="flex items-center py-[20px]">
@@ -169,7 +173,6 @@ const token = user.access_Token
                   className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
                   type="text"
                   placeholder="nhập rating"
-            
                 />
               </div>
               <div className="flex items-center py-[20px]">
@@ -181,7 +184,6 @@ const token = user.access_Token
                   enctype="multipart/form-data"
                   type="file"
                   name="image"
-                 
                 />
               </div>
               <div className="flex items-center py-[20px]">
