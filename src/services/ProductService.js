@@ -1,7 +1,7 @@
 import axios from "axios";
 export const axiosJWT = axios.create();
 
-export const getAllProduct = async (param = {queryParam : {limit: 0, page: 0}}) => {
+export const getAllProduct = async (param = {queryParam : {limit: 0, page: 0 , value:""}}) => {
   const res = await axios.get(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/getAll-product`,
     {

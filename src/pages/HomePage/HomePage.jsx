@@ -11,17 +11,19 @@ import ProductCompoment from "../../compoments/ProductComponent/ProductCompoment
 import { getAllProduct } from "../../services/ProductService";
 import { useQuery } from "react-query";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 function HomePage() {
 
   const [limitProduct, setLimitProduct] = useState(8);
+  const value = useSelector((state) => state.search);
   const fecchProductAll = async (param) => {
     const res = await getAllProduct(param.queryKey[1]);
     return res;
   };
   const { data: product } = useQuery(
     {
-      queryKey: ["product", { queryParam: { limit: limitProduct, page: 0 } }],
+      queryKey: ["product", { queryParam: { limit: limitProduct, page: 0 , value: value.value } }],
       queryFn: fecchProductAll,
     },
     { retry: 3, retryDelay: 1000 }
@@ -29,6 +31,7 @@ function HomePage() {
   const handleXemThem = () => {
     setLimitProduct((prev) => prev + 8);
   };
+  console.log("value" , value)
   return (
     <div className="bg-[#F5F5FA]">
       <div className="container">

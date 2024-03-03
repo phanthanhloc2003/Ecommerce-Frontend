@@ -37,7 +37,7 @@ function App() {
 
   axiosJWT.interceptors.request.use(
     function (config) {
-      console.log("token neww")
+     
       const dataTime = Math.floor(Date.now() / 1000);
       const { decoded } = handleDecoded();
       if (decoded.exp < dataTime) {

@@ -9,7 +9,7 @@ import { searchTerm } from "../../redux/features/search/searchSlice";
 
 function HeaderComponent() {
   const user = useSelector((state) => state.user);
-  const values = useSelector((state) => state.search)
+
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate()
   const [value , setValue] = useState("");
@@ -25,8 +25,9 @@ function HeaderComponent() {
     setAnchorEl(null);
   };
   const handleSearch = () => {
-    // console.log("alue", value)
+    dispatch(searchTerm(value))
   }
+
 
   return (
     <div className="bg-[#ffffff] py-[8px] relative ">
