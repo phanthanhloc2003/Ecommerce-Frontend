@@ -6,12 +6,16 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import {  detailsProduct } from "../../services/ProductService";
+import { detailsProduct } from "../../services/ProductService";
 import currency from "currency.js";
 
-
-
-export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onDeleteManyProduct  , token}) {
+export default function DataTable({
+  data,
+  onDeleteProduct,
+  onUpdateProduct,
+  onDeleteManyProduct,
+  token,
+}) {
   const [open, setOpen] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState(null);
   const [opens, setOpens] = useState(false);
@@ -44,25 +48,33 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
     setDescription(data.description);
     setCountInStock(data.countInStock);
     setRating(data.rating);
-    setPrice(data.price);
+    setPrice(
+      currency(data.price, { symbol: "", precision: 0 })
+        .format()
+        .replace(/,/g, ".")
+    );
     setId(data._id);
     setOpens(true);
   };
   const hanleOnUpdates = async () => {
-    await onUpdateProduct(id, {
-      name,
-      type,
-      description,
-      countInStock,
-      price,
-      rating,
-    },token);
+    await onUpdateProduct(
+      id,
+      {
+        name,
+        type,
+        description,
+        countInStock,
+        price,
+        rating,
+      },
+      token
+    );
     setOpens(false);
   };
 
   const handleDelete = async () => {
-  await  onDeleteManyProduct(selectedItems)
-  }
+    await onDeleteManyProduct(selectedItems);
+  };
   const handleCloses = () => {
     setOpens(false);
   };
@@ -76,7 +88,13 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
       );
     }
   };
- 
+
+  const formatPrice = (inputValue) => {
+    const formattedValue = currency(inputValue, { symbol: "", precision: 0 })
+      .format()
+      .replace(/,/g, ".");
+    return formattedValue;
+  };
 
   let index = 1;
   return (
@@ -102,7 +120,6 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
         </thead>
         <tbody className="table-group-divider">
           {data.map((item) => (
-            
             <tr className="text-center">
               <th scope="row">
                 <input
@@ -113,7 +130,14 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               </th>
               <th scope="row">{index++}</th>
               <td>{item.name}</td>
-              <td>{currency(item.price, { symbol: '', precision: 0 }).format() } đ</td>
+              <td>
+                {currency(item.price, { symbol: "", precision: 0 })
+                  .format()
+                  .replace(/,/g, ".")}{" "}
+                <sup className="text-[75%] leading-[0] relative top-[-0.5em]">
+                          ₫
+                        </sup>
+              </td>
 
               <td>{item.rating}</td>
               <td>{item.type}</td>
@@ -228,7 +252,8 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
               variant="standard"
               defaultValue={price}
               onChange={(e) => {
-                setPrice(e.target.value);
+                const formattedPrice = formatPrice(e.target.value);
+                setPrice(formattedPrice);
               }}
             />
 
@@ -262,7 +287,6 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
             />
             <TextField
               autoFocus
-             
               margin="dense"
               name="Count inStock"
               type="file"
@@ -273,8 +297,18 @@ export default function DataTable({ data, onDeleteProduct, onUpdateProduct , onD
             />
           </DialogContent>
           <DialogActions>
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" onClick={handleCloses}>Huỷ</button>
-      <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded" onClick={hanleOnUpdates}>OK</button>
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+              onClick={handleCloses}
+            >
+              Huỷ
+            </button>
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
+              onClick={hanleOnUpdates}
+            >
+              OK
+            </button>
           </DialogActions>
         </Dialog>
       </React.Fragment>

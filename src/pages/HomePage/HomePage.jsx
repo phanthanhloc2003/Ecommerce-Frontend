@@ -1,4 +1,3 @@
-
 import SlickImages from "../../compoments/SlickImages/SlickImages";
 import imgage1 from "../../acssets/imgaes/photo-1.jpg.webp";
 import imgage2 from "../../acssets/imgaes/photo-2.jpeg";
@@ -14,7 +13,6 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 function HomePage() {
-
   const [limitProduct, setLimitProduct] = useState(8);
   const value = useSelector((state) => state.search);
   const fecchProductAll = async (param) => {
@@ -23,7 +21,10 @@ function HomePage() {
   };
   const { data: product } = useQuery(
     {
-      queryKey: ["product", { queryParam: { limit: limitProduct, page: 0 , value: value.value } }],
+      queryKey: [
+        "product",
+        { queryParam: { limit: limitProduct, page: 0, value: value.value } },
+      ],
       queryFn: fecchProductAll,
     },
     { retry: 3, retryDelay: 1000 }
@@ -31,7 +32,7 @@ function HomePage() {
   const handleXemThem = () => {
     setLimitProduct((prev) => prev + 8);
   };
-  console.log("value" , value)
+
   return (
     <div className="bg-[#F5F5FA]">
       <div className="container">
@@ -43,6 +44,7 @@ function HomePage() {
             return (
               <ProductCompoment
                 key={product._id}
+                id={product._id}
                 countInStock={product.countInStock}
                 description={product.description}
                 image={product.image}
@@ -56,7 +58,15 @@ function HomePage() {
             );
           })}
         </div>
-        <button onClick={handleXemThem}>xem thêm</button>
+        <div className=" block text-center mt-[20px] ">
+        <button
+          onClick={handleXemThem}
+          className="   bg-[#FFA07A] hover:bg-[#FF7F50] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Xem thêm
+        </button>
+        </div>
+        
       </div>
     </div>
   );

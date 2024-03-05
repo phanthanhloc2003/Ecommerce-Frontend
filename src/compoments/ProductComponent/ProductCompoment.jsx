@@ -1,9 +1,10 @@
+import currency from "currency.js";
 function ProductCompoment(props) {
 
-  const {countInStock,description,image,name,price,rating,type,discount,selled} = props;
+  const {countInStock,description,image,name,price,rating,type,discount,selled , id} = props;
 
   return (
-    <a href="/detail/:id" className=" flex mt-[40px] no-underline ">
+    <a href={`/detail/${id}` }className=" flex mt-[20px] no-underline ">
       <div className="flex flex-col  m-[3px] p-[10px] bg-[#fff] rounded-[8px] border border-solid border-gray-300 h-[320px] w-[250px]">
         <div>
           <img
@@ -36,7 +37,7 @@ function ProductCompoment(props) {
         </div>
         <div className="flex items-center">
           <div className="text-left text-lg leading-6 font-medium text-gray-800">
-            <span>{price}</span>
+          {currency(price, { symbol: '', precision: 0 }).format().replace(/,/g, ".") }
             <sup>₫</sup>
           </div>
           <div className="inline-block h-[18px] ml-[4px] px-[2px] bg-gray-200 rounded-full text-gray-800 text-sm font-medium leading-[125%]">{selled || 10}%</div>

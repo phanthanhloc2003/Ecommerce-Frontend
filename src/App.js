@@ -3,7 +3,7 @@ import { routers } from "./router";
 import { Fragment, useEffect } from "react";
 import { isJsonString } from "./untils";
 import { jwtDecode } from "jwt-decode";
-import { axiosJWT, getDetailsUser, refreshToken } from "./services/UserService";
+import { getDetailsUser, refreshToken } from "./services/UserService";
 import { updateUser } from "./redux/features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Notification from "./compoments/NotificationCompoment/NotificationComponent";
@@ -13,6 +13,10 @@ import Phone from "./compoments/PhoneComponent/PhoneComponent";
 import Email from "./compoments/EmailCompoment/EmailComponent";
 import Pass from "./compoments/PassComponnet/PassComponent";
 import DefaultComponent from "./compoments/DefaultComponent/DefaultComponent";
+
+import axios from "axios";
+
+export const axiosJWT = axios.create();
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -37,22 +41,8 @@ function App() {
 
   axiosJWT.interceptors.request.use(
     function (config) {
-     
-      const dataTime = Math.floor(Date.now() / 1000);
-      const { decoded } = handleDecoded();
-      if (decoded.exp < dataTime) {
-
-        let refresh = localStorage.getItem("refresh_token");
-        return refreshToken(refresh ? JSON.parse(refresh) : "")
-          .then((data) => {
-        
-            config.headers["token"] = `bearer ${data.data.access_Token}`;
-            return config;
-          })
-          .catch((error) => {
-            return Promise.reject(error);
-          });
-      }
+      let token = JSON.parse(localStorage.getItem("accsess_token"));
+      config.headers["token"] = `bearer ${token}`;
       return config;
     },
     function (error) {
@@ -60,7 +50,37 @@ function App() {
       return Promise.reject(error);
     }
   );
-  
+
+  axiosJWT.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      const originalRequest = error.config;
+      // Xử lý khi nhận được lỗi từ API
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        let refresh = localStorage.getItem("refresh_token");
+        return refreshToken(refresh ? JSON.parse(refresh) : "").then(
+          (response) => {
+            if (response.status === 200) {
+              // Lưu trữ lại token mới'
+           
+              localStorage.setItem(
+                "accsess_token",
+                JSON.stringify(response.data.data.access_Token)
+              );
+              // Thực hiện lại yêu cầu gốc đã thất bại với token mới
+              return axiosJWT(originalRequest);
+            }
+          }
+        );
+      }
+
+      return Promise.reject(error);
+    }
+  );
+
   const handleGetDetailsUser = async (id, token) => {
     const res = await getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, token }));

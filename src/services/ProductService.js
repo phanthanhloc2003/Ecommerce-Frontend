@@ -1,8 +1,7 @@
-import axios from "axios";
-export const axiosJWT = axios.create();
+import { axiosJWT } from "../App";
 
 export const getAllProduct = async (param = {queryParam : {limit: 0, page: 0 , value:""}}) => {
-  const res = await axios.get(
+  const res = await axiosJWT.get(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/getAll-product`,
     {
       params: param.queryParam
@@ -12,20 +11,20 @@ export const getAllProduct = async (param = {queryParam : {limit: 0, page: 0 , v
   return res.data;
 };
 export const addProduct = async (data) => {
-  const res = await axios.post(
+  const res = await axiosJWT.post(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/add-product`,data
   );
   return res.data;
 };
 
 export const deleteProduct = async (id) => {
-  const res = await axios.delete(
+  const res = await axiosJWT.delete(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/delete-product/${id}`
   );
   return res.data;
 };
 export const detailsProduct = async (id) => {
-  const res = await axios.get(
+  const res = await axiosJWT.get(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/details-product/${id}`
   );
   return res.data.data;
