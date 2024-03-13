@@ -1,10 +1,11 @@
 import currency from "currency.js";
+import { useNavigate } from "react-router-dom";
 function ProductCompoment(props) {
-
+  const navigate = useNavigate();
   const {countInStock,description,image,name,price,rating,type,discount,selled , id} = props;
 
   return (
-    <a href={`/detail/${id}` }className=" flex mt-[20px] no-underline ">
+    <div onClick={() => navigate(`/detail/${id}`)}  className=" flex mt-[20px] no-underline ">
       <div className="flex flex-col  m-[3px] p-[10px] bg-[#fff] rounded-[8px] border border-solid border-gray-300 h-[320px] w-[250px]">
         <div>
           <img
@@ -43,7 +44,7 @@ function ProductCompoment(props) {
           <div className="inline-block h-[18px] ml-[4px] px-[2px] bg-gray-200 rounded-full text-gray-800 text-sm font-medium leading-[125%]">{selled || 10}%</div>
         </div>
       </div>
-    </a>
+    </div>
   );
 }
 

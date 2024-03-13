@@ -48,11 +48,7 @@ export default function DataTable({
     setDescription(data.description);
     setCountInStock(data.countInStock);
     setRating(data.rating);
-    setPrice(
-      currency(data.price, { symbol: "", precision: 0 })
-        .format()
-        .replace(/,/g, ".")
-    );
+    setPrice(data.price);
     setId(data._id);
     setOpens(true);
   };
@@ -252,8 +248,7 @@ export default function DataTable({
               variant="standard"
               defaultValue={price}
               onChange={(e) => {
-                const formattedPrice = formatPrice(e.target.value);
-                setPrice(formattedPrice);
+                setPrice( e.target.value);
               }}
             />
 

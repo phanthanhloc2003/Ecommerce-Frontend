@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import AdminUser from "../../compoments/AdminUserComponent/AdminUserComponent/AdminUserComponent";
 import AdminProduct from "../../compoments/AdminProductComponent/AdminProductComponent";
+import { useNavigate } from "react-router-dom";
 
 function Admin() {
   const user = useSelector((state) => state.user);
-
+  const navigate = useNavigate();
   // Sử dụng state để theo dõi lựa chọn hiện tại
   const [selectedTab, setSelectedTab] = useState("users");
 
@@ -18,7 +19,9 @@ function Admin() {
     <div>
       <div className="h-[70px] w-[100%] bg-[rgb(13,116,229)] flex items-center">
         <div className="container flex items-center justify-between">
-          <img
+          <img 
+          className="hover:cursor-pointer"
+          onClick={() =>navigate("/") }
             src="https://salt.tikicdn.com/ts/upload/c1/64/f7/4e6e925ea554fc698123ea71ed7bda26.png"
             width="40px"
             height="40px"

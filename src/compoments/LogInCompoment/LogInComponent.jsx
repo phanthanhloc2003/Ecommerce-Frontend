@@ -3,7 +3,7 @@ import {  useSnackbar } from 'notistack';
 import { getDetailsUser, loginUser } from "../../services/UserService";
 import { useMutaionHooks } from "../../hook/userMutaionHook";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/features/user/userSlice";
@@ -13,7 +13,7 @@ import { updateUser } from "../../redux/features/user/userSlice";
 function Login({ onCloseLogInForm }) {
   const navigate = useNavigate();
   const dispatch = useDispatch()
-
+  const location = useLocation();
   const { enqueueSnackbar } = useSnackbar();
   const handleLogInClick = () => {
     onCloseLogInForm();
@@ -21,7 +21,7 @@ function Login({ onCloseLogInForm }) {
   const mutation = useMutaionHooks((data) => loginUser(data));
   const { data, isSuccess,isError } = mutation;
 
-  
+
   const {
     register,
     handleSubmit} = useForm();
@@ -44,7 +44,13 @@ function Login({ onCloseLogInForm }) {
           handleGetDetailsUser(decoded?.id,data?.access_Token)
         }
       }
-      navigate("/");
+      if(location?.state){
+        navigate(location?.state);
+      }
+      else{
+        navigate("/");
+      }
+     
     }
     else if (isError){
       enqueueSnackbar(`${mutation.error.response.data.message}`,  { variant: 'error', anchorOrigin: {

@@ -1,4 +1,11 @@
-import { Typography } from "@mui/material";
+import {
+  Box,
+  FormControl,
+
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import DataTable from "../DataTableComponent/DataTableComponent";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
@@ -33,6 +40,7 @@ function AdminProduct() {
   const { register, handleSubmit } = useForm();
   const user = useSelector((state) => state.user);
   const [rows, setRows] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
   const token = user.access_Token;
   useEffect(() => {
     fetchData();
@@ -47,15 +55,14 @@ function AdminProduct() {
     await deleteProduct(id);
     setReloadData(!reloadData);
   };
-  const handleUpdateProduct = async (id, data , token) => {
-      await UpdateProduct(id, data, token);
-      setOpen(false);
+  const handleUpdateProduct = async (id, data, token) => {
+    await UpdateProduct(id, data, token);
+    setOpen(false);
     setReloadData(!reloadData);
-
   };
 
   const handleDeleteMany = async (id) => {
-    await deleteMany(id , token);
+    await deleteMany(id, token);
     setReloadData(!reloadData);
   };
   const onSubmit = async (data) => {
@@ -88,7 +95,7 @@ function AdminProduct() {
       <div className="mt-[20px]">
         <DataTable
           data={rows}
-          token = {token}
+          token={token}
           reloadData={reloadData}
           onUpdateProduct={handleUpdateProduct}
           onDeleteManyProduct={handleDeleteMany}
@@ -132,13 +139,56 @@ function AdminProduct() {
               </div>
               <div className="flex items-center py-[20px]">
                 <label className="w-[250px]"> type:</label>
-                <input
-                  {...register("type")}
-                  className=" w-[100%] border-solid  border-[1px] outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[36px] py-[10px] px-[12px]"
-                  type="text"
-                  placeholder="nhập type"
-                />
+                <Box
+                  sx={{
+                    width: "100%",
+                    height:"36px",
+                    border: "1px solid",
+                    borderColor: "#D1D5DB",
+                    borderRadius: "4px",
+                    transition: "all 150ms ease-in-out",
+                    "&:hover": { borderColor: "#2563EB" },
+                    "&:focus": {
+                      borderColor: "#2563EB",
+                      outline: "none",
+                      boxShadow: "0 0 0 2px rgba(37, 99, 235, 0.5)",
+                    },
+                  }}
+                >
+                  <FormControl fullWidth>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={selectedType}
+                      onChange={(e) => {
+                        setSelectedType(e.target.value);
+                        register("type", { value: e.target.value });
+                      }}
+                      label="Loại"
+                      sx={{
+                        width: "100%",
+                        border: "none",
+                        outline: "none",
+                        height:"36px",
+                        borderRadius: "4px",
+                        "&:hover": { borderColor: "#2563EB" },
+                        "&:focus": {
+                          borderColor: "#2563EB",
+                          outline: "none",
+                          boxShadow: "0 0 0 2px rgba(37, 99, 235, 0.5)",
+                        },
+                      }}
+                    >
+                      <MenuItem value={"điện thoại"}>điện thoại</MenuItem>
+                      <MenuItem value={"máy tính"}>máy tính</MenuItem>
+                      <MenuItem value={"quần áo"}>quần áo</MenuItem>
+                      <MenuItem value={"đồ da dụng"}>đồ da dụng</MenuItem>
+                      <MenuItem value={"chuột"}>chuột</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
               </div>
+
               <div className="flex items-center py-[20px]">
                 <label className="w-[250px]"> Count inStock:</label>
                 <input

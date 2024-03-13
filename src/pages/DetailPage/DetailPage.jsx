@@ -1,17 +1,21 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { detailsProduct } from "../../services/ProductService";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import currency from "currency.js";
-
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addOrder } from "../../redux/features/orderSlice/orderSlice";
 function DetailPage() {
   const { id } = useParams();
   const [data, setData] = useState("");
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [value, setValue] = useState("");
   const [number, setNumber] = useState(1);
   const [price, setPrice] = useState("");
@@ -24,7 +28,6 @@ function DetailPage() {
     setData(data);
     setValue(data.rating);
   };
-
   useEffect(() => {
     if (data && data.price) {
       const totalPrice = data.price * number;
@@ -39,7 +42,25 @@ function DetailPage() {
   };
   const handleApartFrom = () => {
     if (number > 1) {
-      setNumber(prevNumber => prevNumber - 1);
+      setNumber((prevNumber) => prevNumber - 1);
+    }
+  };
+  const handleAddOrderProduct = () => {
+    if (!user.id) {
+      navigate("/login", { state: location?.pathname });
+    } else {
+      dispatch(
+        addOrder({
+          orderItems: {
+            name: data?.name,
+            amount: number,
+            image: data?.image,
+            price: data?.price,
+            product: data?._id,
+            many:price
+          },
+        })
+      );
     }
   };
 
@@ -218,7 +239,9 @@ function DetailPage() {
                   <div className="flex flex-col gap-[2px]">
                     <div className="flex items-center gap-[8px] text-[#27272A]">
                       <div className="text-[24px] font-semibold leading-[150%]">
-                      {currency(data.price, { symbol: '', precision: 0 }).format().replace(/,/g, ".") }
+                        {currency(data.price, { symbol: "", precision: 0 })
+                          .format()
+                          .replace(/,/g, ".")}
                         <sup className="text-[75%] leading-[0] relative top-[-0.5em]">
                           ₫
                         </sup>
@@ -323,8 +346,7 @@ function DetailPage() {
                           >
                             <img
                               className="w-[20px] h-[20px]"
-                              src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg
-"
+                              src="https://frontend.tikicdn.com/_desktop-next/static/img/pdp_revamp_v2/icons-add.svg"
                               alt=""
                             />
                           </button>
@@ -338,12 +360,25 @@ function DetailPage() {
                     </div>
                     <div className="flex items-center gap-[8px] text-[24px] font-semibold leading-[150%]">
                       <div>
-                        {currency(price, { symbol: '', precision: 0 }).format().replace(/,/g, ".") }
+                        {currency(price, { symbol: "", precision: 0 })
+                          .format()
+                          .replace(/,/g, ".")}
                         <sup className="text-[75%] leading-[0] relative top-[-0.5em]">
                           ₫
                         </sup>
                       </div>
                     </div>
+                  </div>
+                  <div className="grid grid-cols-[minmax(180px, 1fr)] gap-[8px]">
+                    <button className="bg-[#FF424E] rounded-[4px] cursor-pointer font-light flex items-center justify-center p-[8px] whitespace-nowrap text-[#FFFFFF] h-[40px] text-[16px] leading-[150%] ">
+                      <span>Mua ngay</span>
+                    </button>
+                    <button
+                      onClick={handleAddOrderProduct}
+                      className="flex items-center justify-center rounded-[4px]  p-[8px] gap-[8px] w-full h-[40px] cursor-pointer bg-[#FFFFFF] text-[16px] leading-[150px] text-[#0C68FF] border-solid border-[1px] border-[#0C68FF]"
+                    >
+                      Thêm vào Giỏ hàng
+                    </button>
                   </div>
                 </div>
               </div>

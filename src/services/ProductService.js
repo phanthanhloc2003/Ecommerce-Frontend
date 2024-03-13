@@ -1,6 +1,7 @@
 import { axiosJWT } from "../App";
 
 export const getAllProduct = async (param = {queryParam : {limit: 0, page: 0 , value:""}}) => {
+
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API_URL_BACKEND}/product/getAll-product`,
     {
@@ -57,5 +58,10 @@ export const deleteMany = async (id, token) => {
   );
   return res.data;
 };
-
+export const getAllType = async()=>{
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API_URL_BACKEND}/product/getAll-type`
+  );
+  return res.data;
+}
 

@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage/HomePage"
 import LogIn from "../pages/LogInPage/LogInPage"
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage"
 import OrderPage from "../pages/OrderPage/OrderPage"
+import ProductType from "../pages/ProductTypePage/ProductTypePage"
 import ProductsPage from "../pages/ProductsPage/ProductsPage"
 
 
@@ -47,6 +48,10 @@ export const routers = [
         component: Admin,
         isShowHeader: false,
         isPrivate : true
-    }
-   
+    },
+    {
+        path: "product/:type",
+        component: ProductType,
+        isShowHeader: true
+    }   
 ]
