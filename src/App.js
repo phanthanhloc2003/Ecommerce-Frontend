@@ -15,6 +15,11 @@ import Pass from "./compoments/PassComponnet/PassComponent";
 import DefaultComponent from "./compoments/DefaultComponent/DefaultComponent";
 
 import axios from "axios";
+import Address from "./compoments/AddressComponent/AddressComponent";
+import AddressCreate from "./compoments/AddressCreateComponent/AddressCreateComponent";
+import UpdateAddress from "./compoments/UpdateAddressComponent/UpdateAddressComponent";
+import OrderDetails from "./compoments/OrderDetailsComponent/OrderDetailsComponent";
+
 
 export const axiosJWT = axios.create();
 
@@ -56,16 +61,17 @@ function App() {
       return response;
     },
     (error) => {
+      
       const originalRequest = error.config;
       // Xử lý khi nhận được lỗi từ API
-      if (error.response.status === 401 && !originalRequest._retry) {
+      if (error.response.status === 403 && !originalRequest._retry) {
         originalRequest._retry = true;
         let refresh = localStorage.getItem("refresh_token");
         return refreshToken(refresh ? JSON.parse(refresh) : "").then(
           (response) => {
             if (response.status === 200) {
               // Lưu trữ lại token mới'
-           
+
               localStorage.setItem(
                 "accsess_token",
                 JSON.stringify(response.data.data.access_Token)
@@ -91,7 +97,6 @@ function App() {
         <Routes>
           {routers.map((router, index) => {
             const Page = router.component;
-
             const isCheckAuth = !router.isPrivate || user.isAdmin;
 
             const Layout = router.isShowHeader ? DefaultComponent : Fragment;
@@ -111,12 +116,16 @@ function App() {
               />
             );
           })}
-          <Route path="/profile" element={<Profile />}>
+          <Route path="/profile/*" element={<Profile />}>
             <Route index path="account/edit" element={<Account />} />
             <Route path="account/edit/phone" element={<Phone />} />
             <Route path="notification" element={<Notification />} />
             <Route path="account/edit/email" element={<Email />} />
             <Route path="account/edit/pass" element={<Pass />} />
+            <Route path="account/edit/address" element={<Address />} />
+            <Route path="account/edit/address/create" element={<AddressCreate />} />
+            <Route path="account/edit/address/update/:id" element={<UpdateAddress />} />
+            <Route path="account/order/details/:id" element={<OrderDetails />} />
           </Route>
         </Routes>
       </BrowserRouter>

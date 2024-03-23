@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage/HomePage"
 import LogIn from "../pages/LogInPage/LogInPage"
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage"
 import OrderPage from "../pages/OrderPage/OrderPage"
+import Payment from "../pages/PaymentPage/paymentPage"
 import ProductType from "../pages/ProductTypePage/ProductTypePage"
 import ProductsPage from "../pages/ProductsPage/ProductsPage"
 
@@ -52,6 +53,11 @@ export const routers = [
     {
         path: "product/:type",
         component: ProductType,
+        isShowHeader: true
+    }   ,
+    {
+        path: "/payment",
+        component: Payment,
         isShowHeader: true
     }   
 ]

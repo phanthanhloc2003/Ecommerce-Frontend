@@ -5,6 +5,7 @@ const initialState = {
   shippingAddress: {},
   paymentMethod: "",
   itemsPrice: 0,
+  totalOrder: [],
   shippingPrice: 0,
   taxPrice: 0,
   totalPrice: 0,
@@ -58,9 +59,21 @@ export const searchSlice = createSlice({
       const itemOrder = state?.orderItems.find((item) => item?.product ===  idProduct )
       itemOrder.many = itemOrder.amount * itemOrder.price
     },
+    totalPrice:(state , actions) => {
+     
+    const  { total } = actions.payload
+    state.totalPrice = total
+    }
+    ,
+    totalOrder: (state, actions) => {
+      const {id} = actions.payload
+      const itemOrder = state?.orderItems.filter((item) => id.includes(item.product) )
+      state.totalOrder = itemOrder
+      
+    }
     
   },
 });
 
-export const { addOrder ,increaseAmount,decreaseAmount,removeOrder ,removeAllOrderProduct ,calculateTotalPrice} = searchSlice.actions;
+export const { addOrder ,increaseAmount,decreaseAmount,removeOrder ,removeAllOrderProduct ,calculateTotalPrice ,totalPrice ,totalOrder} = searchSlice.actions;
 export default searchSlice.reducer;

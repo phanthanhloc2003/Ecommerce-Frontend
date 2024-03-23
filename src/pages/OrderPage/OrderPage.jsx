@@ -7,17 +7,32 @@ import {
   increaseAmount,
   removeAllOrderProduct,
   removeOrder,
+  totalOrder,
+  totalPrice,
 } from "../../redux/features/orderSlice/orderSlice";
 import { useState } from "react";
 import CartEmpty from "../../compoments/CartEmptyComponent/CartEmptyComponent";
 import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import AlertDialogSlide from "../../compoments/DiaLogCompoment/DiaLogComponent";
 
 function OrderPage() {
-  const order = useSelector((state) => state.order.orderItems);
+  const order = useSelector((state) => state.order);
+ 
+  const user = useSelector((state) => state.user);
   const [checkBox, setCheckBox] = useState([]);
   const [discount, setDiscount] = useState("");
+  const navigate = useNavigate();
   const [many, setMany] = useState(0);
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const [address, setAddress] = useState([]);
+
   const dispatch = useDispatch();
+  useEffect(() => {
+    setAddress(user.address);
+  }, []);
+
   const handleChangeCount = async (type, idProduct) => {
     if (type === "increase") {
       dispatch(increaseAmount({ idProduct }));
@@ -38,7 +53,7 @@ function OrderPage() {
   const handlenchangeCheckAll = (e) => {
     if (e.target.checked) {
       const idCheckbok = [];
-      order.forEach((element) => {
+      order.orderItems.forEach((element) => {
         idCheckbok.push(element.product);
       });
       setCheckBox(idCheckbok);
@@ -55,21 +70,53 @@ function OrderPage() {
     }
   };
   useEffect(() => {
-    const sum = order
+    const sum = order.orderItems
       .filter((item) => checkBox.includes(item.product))
       .reduce((acc, arr) => acc + arr.many, 0);
     setMany(sum);
     setDiscount(calculateDiscount(sum));
-  }, [checkBox, order]);
+  }, [checkBox, order.orderItems]);
 
   const calculateDiscount = (totalAmount) => {
     if (totalAmount === 0) {
       return 0;
-    } else if (totalAmount < 200000) {
+    } else if (totalAmount <= 200000) {
       return 20000;
+    } else if (totalAmount <= 500000) {
+      return 30000;
     } else {
       return 40000;
     }
+  };
+
+  const handlePurchase = () => {
+    if (user.address.length === 0) {
+      navigate("/profile/account/edit/address/create", {
+        state: location?.pathname,
+      });
+    }
+
+    if (checkBox.length > 0) {
+      dispatch(
+        totalPrice({
+          total: {
+            id: checkBox,
+            many: many,
+            discount: discount,
+            address: user.address.find(item => item.ischeck === true)
+          },
+        })
+      );
+      dispatch(totalOrder({
+         id:checkBox
+      }))
+      navigate("/payment");
+    } else {
+      setOpen(true);
+    }
+  };
+  const hanldeCloseDialog = () => {
+    setOpen(false);
   };
   const result = many - discount;
   return (
@@ -80,7 +127,7 @@ function OrderPage() {
             Giỏ hàng{" "}
           </h4>
         </div>
-        {order.length <= 0 ? (
+        {order.orderItems.length <= 0 ? (
           <CartEmpty />
         ) : (
           <div className="flex flex-nowrap justify-between">
@@ -91,9 +138,9 @@ function OrderPage() {
                     onChange={handlenchangeCheckAll}
                     className="mr-[8px]"
                     type="checkbox"
-                    checked={checkBox.length === order.length}
+                    checked={checkBox.length === order.orderItems.length}
                   />
-                  <span>{`tất cả có (${order.length} sản phẩm)`}</span>
+                  <span>{`tất cả có (${order.orderItems.length} sản phẩm)`}</span>
                 </label>
                 <span className="text-gray-500 ">Đơn giá</span>
                 <span className=" text-gray-500">số lương</span>
@@ -109,7 +156,7 @@ function OrderPage() {
                 <div className="absolute w-[100%] top-[32px] bg-[#F5F5FA] h-[10px]"></div>
               </div>
               <div>
-                {order.map((item, key) => (
+                {order.orderItems.map((item, key) => (
                   <div key={key} className="h-auto overflow-hidden">
                     <div className="bg-[#fff] rounded-[4px] mb-[10px] ">
                       <div className="p-[16px] flex items-center">
@@ -213,6 +260,7 @@ function OrderPage() {
                           </div>
                         </div>
                       </div>
+
                       <div className="py-[16px] px-[20px] flex items-center border-solid border-t-[1px] border-[#F2F2F2] ">
                         <div className="inline-flex items-center ">
                           <div className="text-gray-900 text-[15px] font-normal leading-[24px] mr-[12px] whitespace-nowrap">
@@ -230,6 +278,42 @@ function OrderPage() {
             </div>
             <div className="w-[320px] block">
               <div className="sticky top-[-103px]">
+                {address.length > 0 &&
+                  address.map((item, index) => {
+                    if (item.ischeck) {
+                      return (
+                        <div className="" key={index}>
+                          <div className="rounded-[4px] mb-[12px] relative p-[16px] bg-[rgb(255,255,255)]">
+                            <div className="flex items-center justify-between mb-[12px]">
+                              <h3 className="text-[rgb(128,128,137)] m-0 font-medium  text-[16px]">
+                                Giao tới
+                              </h3>
+                              <a
+                                href="#/"
+                                className="text-[rgb(11,116,229)] no-underline"
+                              >
+                                Thay đổi
+                              </a>
+                            </div>
+                            <div className="flex items-center text-[rgb(56,56,61)] mb-[2px] font-semibold">
+                              <p className="m-0 text-[14px]">{item.name}</p>
+                              <i className="block w-[1px] h-[20px] mx-[20px] bg-[rgb(235,235,240)]"></i>
+                              <p className="m-0 text-[14px]">
+                                {item.telephone}
+                              </p>
+                            </div>
+                            <div className="text-[rgb(128,128,137)] ">
+                              <span className="text-[rgb(0,171,86)] bg-[rgb(239,255,244)] text-[12px] font-medium leading-[16px] px-[6px] rounded-[100px] mr-[4px] h-[18px] inline-flex items-center">
+                                Nhà
+                              </span>
+                              {`${item?.street}, ${item?.selectedWard} , ${item?.selectedDistrict} , ${item?.selectedProvince}`}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
+
                 <div className="rounded-[4px] mt-[12px] relative p-[16px] bg-[#fff] mb-[12px]">
                   <div className="flex items-center justify-between text-[13px] leading-[20px] mb-[16px]">
                     <div className="text-gray-900 m-0 capitalize">
@@ -319,7 +403,11 @@ function OrderPage() {
                     </div>
                   </div>
                 </div>
-                <button className="mt-[15px] w-[100%] bg-[#FF424E] text-[#fff] py-[13px] px-[10px] text-center rounded-[4px] border-none cursor-pointer block ">
+                <AlertDialogSlide opens={open} hanleClose={hanldeCloseDialog} />
+                <button
+                  onClick={handlePurchase}
+                  className="mt-[15px] w-[100%] bg-[#FF424E] text-[#fff] py-[13px] px-[10px] text-center rounded-[4px] border-none cursor-pointer block "
+                >
                   Mua hàng
                 </button>
               </div>

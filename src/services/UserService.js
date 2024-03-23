@@ -93,3 +93,57 @@ export const deleteUser = async (id, token) => {
 
   return res.data;
 };
+
+
+export const createAddress = async (id, data , token) => {
+  console.log({id , data , token});
+  const res = await axiosJWT.post(
+    `${process.env.REACT_APP_API_URL_BACKEND}/user/address`,data,
+    {
+      headers: {
+        token: `bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const updateAddress = async (id, data , token) => {
+ 
+  const res = await axiosJWT.put(
+    `${process.env.REACT_APP_API_URL_BACKEND}/user/update-address/${id}`,data,
+    {
+      headers: {
+        token: `bearer ${token}`,
+      },
+    }
+  );
+
+  return res.data;
+};
+
+export const getDetailsAddress = async (id , token) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API_URL_BACKEND}/user/detail-address/${id}`,
+    {
+      headers: {
+        token: `bearer ${token}`,
+      },
+    }
+  );
+  return res.data.data;
+}
+
+
+export const deleteAddress = async (id , token) => {
+  const res = await axiosJWT.delete(
+    `${process.env.REACT_APP_API_URL_BACKEND}/user/delete-address/${id}`,
+    {headers: {
+      token: `bearer ${token}`,
+    }}
+  );
+  return res.data.data;
+}
+
+

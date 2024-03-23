@@ -1,7 +1,7 @@
 import {
   Box,
   FormControl,
-
+  
   MenuItem,
   Select,
   Typography,
@@ -126,7 +126,7 @@ function AdminProduct() {
           <DialogContent dividers>
             <form
               onSubmit={handleSubmit(onSubmit)}
-              enctype="multipart/form-data"
+              encType="multipart/form-data"
             >
               <div className="flex items-center py-[20px]">
                 <label className="w-[250px]"> name:</label>
@@ -227,11 +227,10 @@ function AdminProduct() {
               </div>
               <div className="flex items-center py-[20px]">
                 <label className="w-[250px]"> image</label>
-
                 <input
                   className=" w-[100%]  outline-none rounded-[4px] transition-all duration-150 ease-in-out border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 h-[50px] py-[10px] px-[12px]"
                   {...register("image")}
-                  enctype="multipart/form-data"
+                  encType="multipart/form-data"
                   type="file"
                   name="image"
                 />

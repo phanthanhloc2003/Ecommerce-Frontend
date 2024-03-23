@@ -4,7 +4,7 @@ const initialState = {
   id: "",
   name: "",
   email:"",
-  address: "",
+  address: [],
   phone: "",
   avata: "",
   access_Token:"",
@@ -22,7 +22,7 @@ export const userSlice = createSlice({
     state.id = _id;
     state.name = name;
     state.email = email;
-    state.address = address;
+    state.address = [...address];
     state.phone = phone;
     state.avata = avata;
     state.password = password;

@@ -15,7 +15,7 @@ function EditDialog({ open, handleCloses, detailsUser, handleUpdateUser }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [nickname, setNickName] = useState("");
-  const [err , setErr] = useState("");
+  const [err , setErr] = useState(false);
 
   useEffect(() => {
     if (detailsUser) {
@@ -95,7 +95,9 @@ function EditDialog({ open, handleCloses, detailsUser, handleUpdateUser }) {
             fullWidth
             variant="standard"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              setErr(false)
+              setPhone(e.target.value)}}
           />
           <TextField
             autoFocus

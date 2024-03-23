@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
-import { getDetailsUser, updateDataUser, uploadImage } from "../../services/UserService";
+import {
+  getDetailsUser,
+  updateDataUser,
+  uploadImage,
+} from "../../services/UserService";
 import { updateUser } from "../../redux/features/user/userSlice";
 
 function Account() {
@@ -31,7 +35,7 @@ function Account() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-   
+
     setImage(file);
     setHidden(true);
   };
@@ -51,20 +55,19 @@ function Account() {
       const res = await uploadImage(formData);
       handleGetDetailsUser(res.data, user.access_Token);
     }
-    if(nickname){
+    if (nickname) {
       const data = await updateDataUser(user?.id, { nickname });
       handleUploadnickname(user.id, user.access_Token);
     }
-    if(name){
+    if (name) {
       const data = await updateDataUser(user?.id, { name });
       handleUploadnickname(user.id, user.access_Token);
     }
   };
-  const handleUploadnickname = async (id , token) => {
+  const handleUploadnickname = async (id, token) => {
     const res = await getDetailsUser(id, token);
     dispatch(updateUser({ ...res?.data, token }));
-
-  }
+  };
 
   const handleGetDetailsUser = async (data, token) => {
     dispatch(updateUser({ ...data, token }));

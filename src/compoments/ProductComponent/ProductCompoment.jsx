@@ -34,7 +34,7 @@ function ProductCompoment(props) {
            
           </div>
 
-          <div className="text-gray-500 font-normal text-xs leading-6 ml-[4px] pl-[5px]">đã bán {discount || 10}</div>
+          <div className="text-gray-500 font-normal text-xs leading-6 ml-[4px] pl-[5px]">đã bán {selled}</div>
         </div>
         <div className="flex items-center">
           <div className="text-left text-lg leading-6 font-medium text-gray-800">
