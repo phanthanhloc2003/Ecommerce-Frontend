@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getDetailsOrder } from "../../services/OrderSevice";
 import currency from "currency.js";
 
@@ -8,6 +8,7 @@ function OrderDetails() {
   const { id } = useParams();
   const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fectDetailsOrder = async () => {
@@ -16,7 +17,10 @@ function OrderDetails() {
     };
     fectDetailsOrder();
   }, []);
-
+  console.log(data)
+   const handleReturn = () => {
+    navigate("/profile/my-account")
+   }
   return (
     <div>
       {data?.length < 1 ? (
@@ -24,7 +28,7 @@ function OrderDetails() {
       ) : (
         <div className="">
           <div className="bg-white p-[15px] rounded-[5px] flex justify-between items-center">
-            <div className="flex items-center text-[15px] font-medium text-gray-500 cursor-pointer">
+            <div onClick={handleReturn} className="flex items-center text-[15px] font-medium text-gray-500 cursor-pointer">
               <i className="bi bi-chevron-left mr-[5px]"></i>
               TRỞ LẠI
             </div>
@@ -122,7 +126,7 @@ function OrderDetails() {
                     Phí vận chuyển
                   </div>
                   <div className=" border-l-[1px] border-dotted border-[rgba(0,0,0,0.09)] w-[240px] py-[13px] break-normal  ">
-                    {currency(data.DeliveryCharges, {
+                    {currency(data.discount, {
                       symbol: "",
                       precision: 0,
                     })
@@ -151,7 +155,7 @@ function OrderDetails() {
                     Giảm giá từ shop
                   </div>
                   <div className=" border-l-[1px] border-dotted border-[rgba(0,0,0,0.09)] w-[240px] py-[13px] break-normal  ">
-                    {currency(data.discount, { symbol: "", precision: 0 })
+                    {currency(data.DeliveryCharges, { symbol: "", precision: 0 })
                       .format()
                       .replace(/,/g, ".")}{" "}
                     <sup>₫</sup>

@@ -18,7 +18,7 @@ export const createOrder = async (data, token) => {
 
 export const getAllOrder = async ( token) => {
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API_URL_BACKEND}/order/get-order`,
+    `${process.env.REACT_APP_API_URL_BACKEND}/order/getAll-order`,
   
     {
       headers: {
@@ -32,7 +32,7 @@ export const getAllOrder = async ( token) => {
 
 export const getDetailsOrder = async (id, token) => {
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API_URL_BACKEND}/order/get-detail-order/${id}`,
+    `${process.env.REACT_APP_API_URL_BACKEND}/order/getDetail-order/${id}`,
   
     {
       headers: {

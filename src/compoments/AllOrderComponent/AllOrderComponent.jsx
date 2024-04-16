@@ -47,10 +47,7 @@ function AllOrder() {
                 key={key}
                 className="w-full flex flex-col bg-white p-[20px] mb-[20px]"
               >
-                {donHang.listProducts.map((e, i) => {
-                  return (
-                    <>
-                      <div className="flex justify-between border-b-[1px] border-solid border-[#E8E8E8] pb-[15px]">
+                 <div className="flex justify-between border-b-[1px] border-solid border-[#E8E8E8] pb-[15px]">
                         <div className="text-[14px] text-white bg-[#EE4D2D] text-center px-[5px] font-normal rounded-[5px]">
                           yêu thích
                         </div>
@@ -64,6 +61,10 @@ function AllOrder() {
                           </div>
                         </div>
                       </div>
+                {donHang.listProducts.map((e, i) => {
+                  return (
+                    <>
+                     
 
                       <div className="flex justify-between py-[10px] border-b-[1px] border-solid border-[#E8E8E8]">
                         <div className="flex">

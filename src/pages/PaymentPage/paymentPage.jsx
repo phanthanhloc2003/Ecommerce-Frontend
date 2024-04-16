@@ -2,25 +2,28 @@ import currency from "currency.js";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { createOrder } from "../../services/OrderSevice";
+import { useNavigate } from "react-router-dom";
 function Payment() {
   const user = useSelector((state) => state.user);
   const order = useSelector((state) => state.order);
-  const [sale, setSale] = useState("");
+  const [sale, setSale] = useState(0);
   const [results, setResults] = useState(0);
-  const [sum, setSum] = useState("");
+  const [sum, setSum] = useState(0);
+  const navigate = useNavigate();
   const result = order.orderItems.filter((item) =>
     order.totalPrice.id.includes(item.product)
   );
   const address = order.totalPrice.address;
-
-  useEffect(() => {
-    if (order.totalPrice.id.length > 1) setSale(10000);
-    setSum(calculateDiscount(order.totalPrice.many));
-    const result =
-      order.totalPrice.many - order.totalPrice.discount - sale + sum;
-
-    setResults(result);
-  }, []);
+    useEffect(() => {
+      if (order.totalPrice.id.length > 1) setSale(10000);
+      setSum(calculateDiscount(order.totalPrice.many));
+    }, [order.totalPrice.id.length, order.totalPrice.many]);
+    
+    useEffect(() => {
+      const result =
+        order.totalPrice.many - order.totalPrice.discount + sale + sum;
+      setResults(result);
+    }, [order.totalPrice.discount, sale, sum]);
 
   const currentDate = new Date();
   let date = currentDate.getDate() + 5;
@@ -56,27 +59,29 @@ function Payment() {
       return 30000;
     }
   };
-    
+
   const handleOrder = async () => {
     const shippingAddress =
       order.totalPrice.id.length > 1 ? "giao hàng tiết kiêm" : "";
     const paymentMethod = "thanh toán khi nhận hàng ";
+
     await createOrder(
       {
         orderItems: order.totalOrder,
-        idProduct:  order.totalPrice.id,
+        idProduct: order.totalPrice.id,
         id: user.id,
         paymentMethod: paymentMethod,
         address: address,
         results: results,
         shippingAddress: shippingAddress,
         sale: sale,
-        totalOrder: order.totalPrice.many ,
-        DeliveryCharges :sum,
-        discount: order.totalPrice.discount
+        totalOrder: order.totalPrice.many,
+        DeliveryCharges: sum,
+        discount: order.totalPrice.discount,
       },
       user.access_Token
     );
+    navigate("/");
   };
 
   return (
